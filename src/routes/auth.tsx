@@ -12,13 +12,13 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar — MercadoCerto" },
+      { title: "Entrar — MercadoIQ" },
       {
         name: "description",
         content:
-          "Acesse sua conta do MercadoCerto para registrar e acompanhar suas compras de supermercado.",
+          "Acesse sua conta do MercadoIQ para registrar e acompanhar suas compras de supermercado.",
       },
-      { property: "og:title", content: "Entrar — MercadoCerto" },
+      { property: "og:title", content: "Entrar — MercadoIQ" },
       {
         property: "og:description",
         content: "Acesse sua conta e continue controlando os gastos do mercado.",
@@ -84,7 +84,7 @@ function AuthPage() {
         <span className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
           <ShoppingBasket className="size-5" />
         </span>
-        <span className="font-display text-xl font-semibold">MercadoCerto</span>
+        <span className="font-display text-xl font-semibold">MercadoIQ</span>
       </Link>
 
       <div className="card-soft w-full max-w-sm p-6">

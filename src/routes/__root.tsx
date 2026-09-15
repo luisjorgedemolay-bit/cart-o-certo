@@ -79,13 +79,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MercadoCerto — controle de compras de mercado" },
+      { title: "MercadoIQ — controle de compras de mercado" },
       {
         name: "description",
         content:
           "Registre suas compras de supermercado item a item, por seção, e acompanhe quanto gastou no mês.",
       },
-      { property: "og:title", content: "MercadoCerto" },
+      { property: "og:title", content: "MercadoIQ" },
       {
         property: "og:description",
         content: "Controle simples e bonito das suas compras de mercado.",
@@ -96,7 +96,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "apple-mobile-web-app-title", content: "MercadoCerto" },
+      { name: "apple-mobile-web-app-title", content: "MercadoIQ" },
     ],
     links: [
       {

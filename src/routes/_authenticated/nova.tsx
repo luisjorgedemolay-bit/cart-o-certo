@@ -12,9 +12,9 @@ import { hojeISO } from "@/lib/mercado";
 export const Route = createFileRoute("/_authenticated/nova")({
   head: () => ({
     meta: [
-      { title: "Nova compra — MercadoCerto" },
+      { title: "Nova compra — MercadoIQ" },
       { name: "description", content: "Registre uma nova ida ao mercado e seus itens." },
-      { property: "og:title", content: "Nova compra — MercadoCerto" },
+      { property: "og:title", content: "Nova compra — MercadoIQ" },
       { property: "og:description", content: "Registre uma nova ida ao mercado e seus itens." },
     ],
   }),

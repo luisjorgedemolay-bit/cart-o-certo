@@ -1,6 +1,6 @@
 {
-  "name": "MercadoCerto",
-  "short_name": "MercadoCerto",
+  "name": "MercadoIQ",
+  "short_name": "MercadoIQ",
   "description": "Controle de compras de mercado, item a item, por seção.",
   "start_url": "/painel",
   "scope": "/",

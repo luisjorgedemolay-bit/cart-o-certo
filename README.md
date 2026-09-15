@@ -1,8 +1,6 @@
-# Cartão Certo
+# MercadoIQ — Controle de Compras de Mercado
 
-# MercadoCerto — Controle de Compras de Mercado
-
-App web pessoal para registrar e acompanhar as compras de supermercado item a item — quantidade, valor unitário e total, organizado por seção (padaria, laticínios, carnes, mercearia, hortifruti, limpeza, higiene, bebidas, congelados, outros). Nome provisório "MercadoCerto", sinta-se livre pra sugerir um melhor.
+App web pessoal para registrar e acompanhar as compras de supermercado item a item — quantidade, valor unitário e total, organizado por seção (padaria, laticínios, carnes, mercearia, hortifruti, limpeza, higiene, bebidas, congelados, outros). Nome provisório "MercadoIQ", sinta-se livre pra sugerir um melhor.
 
 **Stack:** React + Tailwind + shadcn/ui + lucide-react no frontend; Supabase (Postgres + Auth + RLS) no backend.
 

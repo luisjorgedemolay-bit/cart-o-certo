@@ -26,9 +26,9 @@ function rotuloMes(chave: string) {
 export const Route = createFileRoute("/_authenticated/compras/")({
   head: () => ({
     meta: [
-      { title: "Histórico de compras — MercadoCerto" },
+      { title: "Histórico de compras — MercadoIQ" },
       { name: "description", content: "Veja suas compras de mercado, da mais recente para a mais antiga." },
-      { property: "og:title", content: "Histórico de compras — MercadoCerto" },
+      { property: "og:title", content: "Histórico de compras — MercadoIQ" },
       { property: "og:description", content: "Suas compras de mercado, da mais recente para a mais antiga." },
     ],
   }),

@@ -8,13 +8,13 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MercadoCerto — controle das compras de mercado" },
+      { title: "MercadoIQ — controle das compras de mercado" },
       {
         name: "description",
         content:
           "Anote cada item do supermercado por seção, com quantidade e valor, e veja quanto gastou no mês.",
       },
-      { property: "og:title", content: "MercadoCerto — controle das compras de mercado" },
+      { property: "og:title", content: "MercadoIQ — controle das compras de mercado" },
       {
         property: "og:description",
         content: "Anote cada item por seção e acompanhe os gastos do mês no celular.",
@@ -58,7 +58,7 @@ function Landing() {
           <ShoppingBasket className="size-6" />
         </span>
         <h1 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl">
-          MercadoCerto
+          MercadoIQ
         </h1>
         <p className="mt-3 max-w-xl text-lg text-muted-foreground">
           Seu controle de compras de supermercado, item a item: quantidade, valor

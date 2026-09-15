@@ -39,7 +39,7 @@ function AppShell() {
             <span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
               <ShoppingBasket className="size-4" />
             </span>
-            <span className="font-display text-base font-semibold">MercadoCerto</span>
+            <span className="font-display text-base font-semibold">MercadoIQ</span>
           </Link>
           <button
             onClick={sair}

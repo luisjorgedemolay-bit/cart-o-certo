@@ -18,9 +18,9 @@ import {
 export const Route = createFileRoute("/_authenticated/compras/$id")({
   head: () => ({
     meta: [
-      { title: "Detalhes da compra — MercadoCerto" },
+      { title: "Detalhes da compra — MercadoIQ" },
       { name: "description", content: "Revise e edite os itens desta compra de mercado." },
-      { property: "og:title", content: "Detalhes da compra — MercadoCerto" },
+      { property: "og:title", content: "Detalhes da compra — MercadoIQ" },
       { property: "og:description", content: "Revise e edite os itens desta compra de mercado." },
     ],
   }),

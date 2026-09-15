@@ -9,9 +9,9 @@ import { brl, iconeDaCategoria } from "@/lib/mercado";
 export const Route = createFileRoute("/_authenticated/painel")({
   head: () => ({
     meta: [
-      { title: "Painel de gastos — MercadoCerto" },
+      { title: "Painel de gastos — MercadoIQ" },
       { name: "description", content: "Gasto do mês, comparação com o mês anterior e seções que mais pesaram." },
-      { property: "og:title", content: "Painel de gastos — MercadoCerto" },
+      { property: "og:title", content: "Painel de gastos — MercadoIQ" },
       { property: "og:description", content: "Gasto do mês, comparação com o mês anterior e seções que mais pesaram." },
     ],
   }),
