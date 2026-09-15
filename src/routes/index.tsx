@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { ShoppingBasket, ListChecks, PieChart, Smartphone } from "lucide-react";
+import { ListChecks, PieChart, Smartphone } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Marca } from "@/components/Marca";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -55,7 +56,7 @@ function Landing() {
     <main className="min-h-screen bg-background">
       <div className="mx-auto max-w-3xl px-5 py-14">
         <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-          <ShoppingBasket className="size-6" />
+          <Marca className="size-6" />
         </span>
         <h1 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl">
           MercadoIQ

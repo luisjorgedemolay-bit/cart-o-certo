@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ShoppingBasket, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +8,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Marca } from "@/components/Marca";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -82,7 +83,7 @@ function AuthPage() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-background px-5 py-10">
       <Link to="/" className="mb-8 flex items-center gap-2">
         <span className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-          <ShoppingBasket className="size-5" />
+          <Marca className="size-5" />
         </span>
         <span className="font-display text-xl font-semibold">MercadoIQ</span>
       </Link>

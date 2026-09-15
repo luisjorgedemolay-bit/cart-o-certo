@@ -1,8 +1,9 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutGrid, Receipt, PlusCircle, LogOut, ShoppingBasket } from "lucide-react";
+import { LayoutGrid, Receipt, PlusCircle, LogOut } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
+import { Marca } from "@/components/Marca";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -37,7 +38,7 @@ function AppShell() {
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <Link to="/painel" className="flex items-center gap-2">
             <span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-              <ShoppingBasket className="size-4" />
+              <Marca className="size-4" />
             </span>
             <span className="font-display text-base font-semibold">MercadoIQ</span>
           </Link>
