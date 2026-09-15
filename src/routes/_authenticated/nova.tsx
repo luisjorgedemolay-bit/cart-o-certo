@@ -124,7 +124,6 @@ function NovaCompra() {
           ref={inputFotoRef}
           type="file"
           accept="image/*"
-          capture="environment"
           className="hidden"
           onChange={aoEscolherFoto}
         />
