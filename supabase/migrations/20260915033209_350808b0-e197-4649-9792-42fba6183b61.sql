@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.recalcular_total_compra() FROM PUBLIC, anon, authenticated;
