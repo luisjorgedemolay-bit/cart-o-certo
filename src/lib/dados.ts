@@ -185,6 +185,28 @@ function invalidarCompra(qc: ReturnType<typeof useQueryClient>, compraId: string
   qc.invalidateQueries({ queryKey: ["dashboard"] });
 }
 
+export function useAdicionarItensEmLote(compraId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      itens: {
+        nome: string;
+        quantidade: number;
+        unidade: string;
+        valor_unitario: number;
+        categoria_id: string | null;
+      }[],
+    ) => {
+      if (itens.length === 0) return;
+      const { error } = await supabase
+        .from("itens")
+        .insert(itens.map((i) => ({ ...i, compra_id: compraId })));
+      if (error) throw error;
+    },
+    onSuccess: () => invalidarCompra(qc, compraId),
+  });
+}
+
 export function useAdicionarItem(compraId: string) {
   const qc = useQueryClient();
   return useMutation({
