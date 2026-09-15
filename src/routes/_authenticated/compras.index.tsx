@@ -1,9 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { ChevronRight, Store } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useCompras } from "@/lib/dados";
 import { brl, dataCurta } from "@/lib/mercado";
+
+function rotuloMes(chave: string) {
+  const [ano, mes] = chave.split("-").map(Number);
+  const nome = new Date(ano, mes - 1, 1).toLocaleDateString("pt-BR", {
+    month: "long",
+    year: "numeric",
+  });
+  return nome.charAt(0).toUpperCase() + nome.slice(1);
+}
 
 export const Route = createFileRoute("/_authenticated/compras/")({
   head: () => ({
@@ -19,6 +37,23 @@ export const Route = createFileRoute("/_authenticated/compras/")({
 
 function Historico() {
   const { data: compras, isLoading } = useCompras();
+  const [mes, setMes] = useState("todos");
+  const [busca, setBusca] = useState("");
+
+  const mesesDisponiveis = useMemo(() => {
+    const chaves = new Set((compras ?? []).map((c) => c.data.slice(0, 7)));
+    return [...chaves].sort((a, b) => b.localeCompare(a));
+  }, [compras]);
+
+  const filtradas = useMemo(() => {
+    return (compras ?? []).filter((c) => {
+      const bateMes = mes === "todos" || c.data.slice(0, 7) === mes;
+      const bateBusca =
+        busca.trim() === "" ||
+        (c.mercado ?? "").toLowerCase().includes(busca.trim().toLowerCase());
+      return bateMes && bateBusca;
+    });
+  }, [compras, mes, busca]);
 
   return (
     <div className="space-y-5">
@@ -42,8 +77,40 @@ function Historico() {
         </div>
       )}
 
+      {!isLoading && (compras?.length ?? 0) > 0 && (
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Select value={mes} onValueChange={setMes}>
+            <SelectTrigger className="sm:w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="todos">Todos os meses</SelectItem>
+              {mesesDisponiveis.map((chave) => (
+                <SelectItem key={chave} value={chave}>
+                  {rotuloMes(chave)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Input
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            placeholder="Buscar por mercado…"
+            className="sm:flex-1"
+          />
+        </div>
+      )}
+
+      {!isLoading && (compras?.length ?? 0) > 0 && filtradas.length === 0 && (
+        <div className="card-soft p-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            Nenhuma compra bate com esse filtro.
+          </p>
+        </div>
+      )}
+
       <ul className="space-y-3">
-        {(compras ?? []).map((compra) => (
+        {filtradas.map((compra) => (
           <li key={compra.id}>
             <Link
               to="/compras/$id"

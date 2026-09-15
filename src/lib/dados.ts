@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
   CATEGORIAS_PADRAO,
+  hojeISO,
   type Categoria,
   type Compra,
   type Item,
@@ -122,6 +123,56 @@ export function useExcluirCompra() {
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("compras").delete().eq("id", id);
       if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["compras"] }),
+  });
+}
+
+export function useDuplicarCompra() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (compraId: string): Promise<Compra> => {
+      const uid = await userId();
+      const { data: original, error: erroCompra } = await supabase
+        .from("compras")
+        .select("*")
+        .eq("id", compraId)
+        .single();
+      if (erroCompra) throw erroCompra;
+
+      const { data: itensOriginais, error: erroItens } = await supabase
+        .from("itens")
+        .select("*")
+        .eq("compra_id", compraId);
+      if (erroItens) throw erroItens;
+
+      const { data: nova, error: erroNova } = await supabase
+        .from("compras")
+        .insert({
+          user_id: uid,
+          data: hojeISO(),
+          mercado: original.mercado,
+          forma_pagamento: original.forma_pagamento,
+        })
+        .select()
+        .single();
+      if (erroNova) throw erroNova;
+
+      if (itensOriginais && itensOriginais.length > 0) {
+        const { error: erroCopiaItens } = await supabase.from("itens").insert(
+          itensOriginais.map((i) => ({
+            compra_id: nova.id,
+            categoria_id: i.categoria_id,
+            nome: i.nome,
+            quantidade: i.quantidade,
+            unidade: i.unidade,
+            valor_unitario: i.valor_unitario,
+          })),
+        );
+        if (erroCopiaItens) throw erroCopiaItens;
+      }
+
+      return nova as Compra;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["compras"] }),
   });
