@@ -1,4 +1,79 @@
-import { createWorker } from "tesseract.js";
+import { createWorker, PSM } from "tesseract.js";
+
+// --- Pré-processamento de imagem: escala de cinza + binarização (método de Otsu) ---
+// Isso é o que mais pesa na precisão do OCR grátis — sem isso, fundo com estampa,
+// sombra ou pouco contraste faz o Tesseract praticamente não reconhecer nada.
+
+function calcularLimiarOtsu(histograma: number[], total: number) {
+  let somaTotal = 0;
+  for (let i = 0; i < 256; i++) somaTotal += i * histograma[i];
+
+  let somaFundo = 0;
+  let pesoFundo = 0;
+  let maxVariancia = 0;
+  let limiar = 128;
+
+  for (let t = 0; t < 256; t++) {
+    pesoFundo += histograma[t];
+    if (pesoFundo === 0) continue;
+    const pesoFrente = total - pesoFundo;
+    if (pesoFrente === 0) break;
+
+    somaFundo += t * histograma[t];
+    const mediaFundo = somaFundo / pesoFundo;
+    const mediaFrente = (somaTotal - somaFundo) / pesoFrente;
+    const variancia = pesoFundo * pesoFrente * (mediaFundo - mediaFrente) ** 2;
+    if (variancia > maxVariancia) {
+      maxVariancia = variancia;
+      limiar = t;
+    }
+  }
+  return limiar;
+}
+
+async function prepararImagemParaOcr(arquivo: File): Promise<Blob> {
+  const bitmap = await createImageBitmap(arquivo);
+  const LADO_MAXIMO = 2200;
+  const escala = Math.min(1, LADO_MAXIMO / Math.max(bitmap.width, bitmap.height));
+  const largura = Math.max(1, Math.round(bitmap.width * escala));
+  const altura = Math.max(1, Math.round(bitmap.height * escala));
+
+  const canvas = document.createElement("canvas");
+  canvas.width = largura;
+  canvas.height = altura;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Não consegui preparar a imagem.");
+  ctx.drawImage(bitmap, 0, 0, largura, altura);
+
+  const imagem = ctx.getImageData(0, 0, largura, altura);
+  const pixels = imagem.data;
+  const total = largura * altura;
+  const cinza = new Uint8ClampedArray(total);
+  const histograma = new Array(256).fill(0);
+
+  for (let i = 0; i < total; i++) {
+    const r = pixels[i * 4];
+    const g = pixels[i * 4 + 1];
+    const b = pixels[i * 4 + 2];
+    const v = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+    cinza[i] = v;
+    histograma[v]++;
+  }
+
+  const limiar = calcularLimiarOtsu(histograma, total);
+
+  for (let i = 0; i < total; i++) {
+    const v = cinza[i] > limiar ? 255 : 0;
+    pixels[i * 4] = v;
+    pixels[i * 4 + 1] = v;
+    pixels[i * 4 + 2] = v;
+  }
+  ctx.putImageData(imagem, 0, 0);
+
+  return await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("Falha ao gerar imagem."))), "image/png");
+  });
+}
 
 export type ItemLido = {
   nome: string;
@@ -115,16 +190,26 @@ export async function lerComprovante(
   arquivo: File,
   aoProgredir?: (fracao: number) => void,
 ): Promise<ItemLido[]> {
+  const imagemPreparada = await prepararImagemParaOcr(arquivo);
+
   const worker = await createWorker("por", 1, {
     logger: (m) => {
       if (m.status === "recognizing text" && aoProgredir) aoProgredir(m.progress);
     },
   });
   try {
+    // PSM 4 = "single column of text of variable sizes" — o modo recomendado
+    // pra recibo/nota fiscal, bem melhor que o automático (PSM 3) pra esse formato.
+    await worker.setParameters({ tessedit_pageseg_mode: PSM.SINGLE_COLUMN });
     const {
       data: { text },
-    } = await worker.recognize(arquivo);
-    return interpretarTextoComprovante(text);
+    } = await worker.recognize(imagemPreparada);
+    const itens = interpretarTextoComprovante(text);
+    if (itens.length === 0) {
+      // Ajuda a depurar se continuar falhando: o texto bruto fica no console do navegador.
+      console.warn("[MercadoIQ] OCR não achou itens. Texto bruto reconhecido:\n", text);
+    }
+    return itens;
   } finally {
     await worker.terminate();
   }

@@ -113,8 +113,9 @@ function NovaCompra() {
           <div>
             <p className="text-sm font-semibold">Fotografar a nota</p>
             <p className="text-xs text-muted-foreground">
-              Leio os itens e já sugiro a seção de cada um — sem custo, mas pode errar
-              alguma coisa. Revise antes de confirmar.
+              Estique a nota numa superfície lisa e escura (sem estampa), com boa luz e
+              sem sombra em cima do texto. Leio os itens e já sugiro a seção — sem
+              custo, mas pode errar. Revise antes de confirmar.
             </p>
           </div>
         </div>
