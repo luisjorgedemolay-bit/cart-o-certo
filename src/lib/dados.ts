@@ -253,6 +253,35 @@ export type LinhaDashboard = {
   itens: (Item & { categorias: Categoria | null })[];
 };
 
+export type LinhaDashboard = {
+  compra: Compra;
+  itens: (Item & { categorias: Categoria | null })[];
+};
+
+export function useDadosDashboard() {
+  return useQuery({
+    queryKey: ["dashboard"],
+    queryFn: async (): Promise<LinhaDashboard[]> => {
+      const inicio = new Date();
+      inicio.setDate(1);
+      inicio.setMonth(inicio.getMonth() - 1);
+      const desde = `${inicio.getFullYear()}-${String(inicio.getMonth() + 1).padStart(2, "0")}-01`;
+      const { data, error } = await supabase
+        .from("compras")
+        .select("*, itens(*, categorias(*))")
+        .gte("data", desde)
+        .order("data", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((c) => {
+        const { itens, ...compra } = c as never as Compra & {
+          itens: (Item & { categorias: Categoria | null })[];
+        };
+        return { compra, itens: itens ?? [] };
+      });
+    },
+  });
+}
+
 export type MembroCasa = {
   membro_user_id: string;
   papel: "dono" | "membro";

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedCasaRouteImport } from './routes/_authenticated/casa'
 import { Route as AuthenticatedNovaRouteImport } from './routes/_authenticated/nova'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedComprasIndexRouteImport } from './routes/_authenticated/compras.index'
@@ -30,6 +31,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedCasaRoute = AuthenticatedCasaRouteImport.update({
+  id: '/casa',
+  path: '/casa',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedNovaRoute = AuthenticatedNovaRouteImport.update({
   id: '/nova',
@@ -56,6 +62,7 @@ const AuthenticatedComprasIdRoute = AuthenticatedComprasIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/casa': typeof AuthenticatedCasaRoute
   '/nova': typeof AuthenticatedNovaRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/compras/$id': typeof AuthenticatedComprasIdRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/casa': typeof AuthenticatedCasaRoute
   '/nova': typeof AuthenticatedNovaRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/compras/$id': typeof AuthenticatedComprasIdRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/casa': typeof AuthenticatedCasaRoute
   '/_authenticated/nova': typeof AuthenticatedNovaRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/compras/$id': typeof AuthenticatedComprasIdRoute
@@ -81,14 +90,17 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/nova' | '/painel' | '/compras/$id' | '/compras/'
+  fullPaths:
+    '/' | '/auth' | '/casa' | '/nova' | '/painel' | '/compras/$id' | '/compras/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/nova' | '/painel' | '/compras/$id' | '/compras'
+  to:
+    '/' | '/auth' | '/casa' | '/nova' | '/painel' | '/compras/$id' | '/compras'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/casa'
     | '/_authenticated/nova'
     | '/_authenticated/painel'
     | '/_authenticated/compras/$id'
@@ -124,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/casa': {
+      id: '/_authenticated/casa'
+      path: '/casa'
+      fullPath: '/casa'
+      preLoaderRoute: typeof AuthenticatedCasaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/nova': {
       id: '/_authenticated/nova'
       path: '/nova'
@@ -156,6 +175,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCasaRoute: typeof AuthenticatedCasaRoute
   AuthenticatedNovaRoute: typeof AuthenticatedNovaRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedComprasIdRoute: typeof AuthenticatedComprasIdRoute
@@ -163,6 +183,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCasaRoute: AuthenticatedCasaRoute,
   AuthenticatedNovaRoute: AuthenticatedNovaRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedComprasIdRoute: AuthenticatedComprasIdRoute,
