@@ -14,7 +14,114 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categorias: {
+        Row: {
+          cor: string
+          created_at: string
+          icone: string
+          id: string
+          nome: string
+          user_id: string
+        }
+        Insert: {
+          cor?: string
+          created_at?: string
+          icone?: string
+          id?: string
+          nome: string
+          user_id: string
+        }
+        Update: {
+          cor?: string
+          created_at?: string
+          icone?: string
+          id?: string
+          nome?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      compras: {
+        Row: {
+          created_at: string
+          data: string
+          forma_pagamento: string | null
+          id: string
+          mercado: string | null
+          user_id: string
+          valor_total: number
+        }
+        Insert: {
+          created_at?: string
+          data?: string
+          forma_pagamento?: string | null
+          id?: string
+          mercado?: string | null
+          user_id: string
+          valor_total?: number
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          forma_pagamento?: string | null
+          id?: string
+          mercado?: string | null
+          user_id?: string
+          valor_total?: number
+        }
+        Relationships: []
+      }
+      itens: {
+        Row: {
+          categoria_id: string | null
+          compra_id: string
+          created_at: string
+          id: string
+          nome: string
+          quantidade: number
+          unidade: string
+          valor_total: number | null
+          valor_unitario: number
+        }
+        Insert: {
+          categoria_id?: string | null
+          compra_id: string
+          created_at?: string
+          id?: string
+          nome: string
+          quantidade?: number
+          unidade?: string
+          valor_total?: number | null
+          valor_unitario?: number
+        }
+        Update: {
+          categoria_id?: string | null
+          compra_id?: string
+          created_at?: string
+          id?: string
+          nome?: string
+          quantidade?: number
+          unidade?: string
+          valor_total?: number | null
+          valor_unitario?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itens_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itens_compra_id_fkey"
+            columns: ["compra_id"]
+            isOneToOne: false
+            referencedRelation: "compras"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
