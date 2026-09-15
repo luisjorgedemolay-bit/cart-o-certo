@@ -25,8 +25,10 @@ export function FormularioItem({ compraId }: { compraId: string }) {
   const [categoriaId, setCategoriaId] = useState<string>("");
   const [valorUnitario, setValorUnitario] = useState("");
 
-  const total = (Number(quantidade.replace(",", ".")) || 0) *
-    (Number(valorUnitario.replace(",", ".")) || 0);
+  const qtdNum = Number(quantidade.replace(",", ".")) || 0;
+  const valorUnitarioNum = Number(valorUnitario.replace(",", ".")) || 0;
+  const total = qtdNum * valorUnitarioNum;
+  const ehPorPeso = unidade === "kg" || unidade === "g";
 
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
@@ -64,12 +66,13 @@ export function FormularioItem({ compraId }: { compraId: string }) {
 
       <div className="grid grid-cols-3 gap-3">
         <div className="space-y-1.5">
-          <Label htmlFor="qtd">Qtd.</Label>
+          <Label htmlFor="qtd">{ehPorPeso ? `Peso (${unidade})` : "Qtd."}</Label>
           <Input
             id="qtd"
             inputMode="decimal"
             value={quantidade}
             onChange={(e) => setQuantidade(e.target.value)}
+            placeholder={ehPorPeso ? "0,500" : "1"}
           />
         </div>
         <div className="space-y-1.5">
@@ -88,7 +91,7 @@ export function FormularioItem({ compraId }: { compraId: string }) {
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="vu">Valor un.</Label>
+          <Label htmlFor="vu">{ehPorPeso ? `Preço/${unidade}` : "Valor un."}</Label>
           <Input
             id="vu"
             inputMode="decimal"
@@ -98,6 +101,11 @@ export function FormularioItem({ compraId }: { compraId: string }) {
           />
         </div>
       </div>
+      {ehPorPeso && (
+        <p className="-mt-2 text-xs text-muted-foreground">
+          {(quantidade || "0").replace(".", ",")} {unidade} × {brl(valorUnitarioNum)}/{unidade}
+        </p>
+      )}
 
       <div className="space-y-1.5">
         <Label>Seção</Label>

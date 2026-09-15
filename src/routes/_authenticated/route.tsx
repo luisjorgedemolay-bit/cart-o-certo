@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutGrid, Receipt, PlusCircle, LogOut } from "lucide-react";
+import { LayoutGrid, Receipt, PlusCircle, Home, LogOut } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Marca } from "@/components/Marca";
@@ -19,6 +19,7 @@ const LINKS = [
   { to: "/painel", label: "Painel", icon: LayoutGrid },
   { to: "/compras", label: "Compras", icon: Receipt },
   { to: "/nova", label: "Nova", icon: PlusCircle },
+  { to: "/casa", label: "Casa", icon: Home },
 ] as const;
 
 function AppShell() {

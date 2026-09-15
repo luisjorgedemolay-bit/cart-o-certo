@@ -150,6 +150,7 @@ function LinhaEdicao({
   const [unidade, setUnidade] = useState(item.unidade);
   const [valorUnitario, setValorUnitario] = useState(String(item.valor_unitario));
   const [categoriaId, setCategoriaId] = useState(item.categoria_id ?? "");
+  const ehPorPeso = unidade === "kg" || unidade === "g";
 
   async function salvar() {
     try {
@@ -169,12 +170,17 @@ function LinhaEdicao({
   return (
     <li className="space-y-3 bg-muted/60 px-4 py-4">
       <p className="text-sm font-medium">{item.nome}</p>
+      {ehPorPeso && (
+        <p className="text-xs text-muted-foreground">
+          Peso ({unidade}) × Preço/{unidade} = total
+        </p>
+      )}
       <div className="grid grid-cols-3 gap-2">
         <Input
           inputMode="decimal"
           value={quantidade}
           onChange={(e) => setQuantidade(e.target.value)}
-          aria-label="Quantidade"
+          aria-label={ehPorPeso ? `Peso em ${unidade}` : "Quantidade"}
         />
         <Select value={unidade} onValueChange={(v) => setUnidade(v as Item["unidade"])}>
           <SelectTrigger aria-label="Unidade">
@@ -192,7 +198,7 @@ function LinhaEdicao({
           inputMode="decimal"
           value={valorUnitario}
           onChange={(e) => setValorUnitario(e.target.value)}
-          aria-label="Valor unitário"
+          aria-label={ehPorPeso ? `Preço por ${unidade}` : "Valor unitário"}
         />
       </div>
       <Select value={categoriaId} onValueChange={setCategoriaId}>

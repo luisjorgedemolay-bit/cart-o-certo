@@ -253,26 +253,73 @@ export type LinhaDashboard = {
   itens: (Item & { categorias: Categoria | null })[];
 };
 
-export function useDadosDashboard() {
+export type MembroCasa = {
+  membro_user_id: string;
+  papel: "dono" | "membro";
+  entrou_em: string;
+  nome: string;
+};
+
+function invalidarTudoAposMudarCasa(qc: ReturnType<typeof useQueryClient>) {
+  // entrar/sair de uma Casa muda o que fica visível em compras/itens/categorias
+  qc.invalidateQueries({ queryKey: ["minha-casa"] });
+  qc.invalidateQueries({ queryKey: ["categorias"] });
+  qc.invalidateQueries({ queryKey: ["compras"] });
+  qc.invalidateQueries({ queryKey: ["dashboard"] });
+}
+
+export function useMinhaCasa() {
   return useQuery({
-    queryKey: ["dashboard"],
-    queryFn: async (): Promise<LinhaDashboard[]> => {
-      const inicio = new Date();
-      inicio.setDate(1);
-      inicio.setMonth(inicio.getMonth() - 1);
-      const desde = `${inicio.getFullYear()}-${String(inicio.getMonth() + 1).padStart(2, "0")}-01`;
-      const { data, error } = await supabase
-        .from("compras")
-        .select("*, itens(*, categorias(*))")
-        .gte("data", desde)
-        .order("data", { ascending: false });
+    queryKey: ["minha-casa"],
+    queryFn: async (): Promise<MembroCasa[]> => {
+      const { data, error } = await supabase.rpc("membros_da_casa");
       if (error) throw error;
-      return (data ?? []).map((c) => {
-        const { itens, ...compra } = c as never as Compra & {
-          itens: (Item & { categorias: Categoria | null })[];
-        };
-        return { compra, itens: itens ?? [] };
-      });
+      return (data ?? []) as MembroCasa[];
     },
+  });
+}
+
+export function useCriarCasa() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (nome: string) => {
+      const { data, error } = await supabase.rpc("criar_casa", { p_nome: nome || "Minha Casa" });
+      if (error) throw error;
+      return data as string;
+    },
+    onSuccess: () => invalidarTudoAposMudarCasa(qc),
+  });
+}
+
+export function useGerarConviteCasa() {
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.rpc("gerar_convite_casa");
+      if (error) throw error;
+      return data as string;
+    },
+  });
+}
+
+export function useAceitarConviteCasa() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (codigo: string) => {
+      const { data, error } = await supabase.rpc("aceitar_convite_casa", { p_codigo: codigo });
+      if (error) throw error;
+      return data as string;
+    },
+    onSuccess: () => invalidarTudoAposMudarCasa(qc),
+  });
+}
+
+export function useSairDaCasa() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.rpc("sair_da_casa");
+      if (error) throw error;
+    },
+    onSuccess: () => invalidarTudoAposMudarCasa(qc),
   });
 }
